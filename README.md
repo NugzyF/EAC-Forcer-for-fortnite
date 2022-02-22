@@ -1,3 +1,5 @@
 # EAC-Forcer-for-fortnite
+UPDATED TO LASTEST FORTNITE PATCH (IM BACK)
+
 EAC Forcer for fortnite
 FEEL FREE TO SKID , JUST GIVE ME CREDS
