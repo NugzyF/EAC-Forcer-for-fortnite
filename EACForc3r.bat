@@ -1,78 +1,53 @@
-@shift /0
-@shift /0
-@ECHO OFF
-title EAC Forcer by Nugzy
-set /a try=1
-set ESC=
-set Red=%ESC%[31m
-set Green=%ESC%[32m
-set Yellow=%ESC%[33m
-set Blue=%ESC%[34m
-set Magenta=%ESC%[35m
-set Cyan=%ESC%[36m
-set White=%ESC%[37m
-set LRed=%ESC%[91m
-set LGreen=%ESC%[92m
-set LYellow=%ESC%[93m
-set LBlue=%ESC%[94m
-set LMagenta=%ESC%[95m
-set LCyan=%ESC%[96m
+@echo off
+:-------------------------------------
+  IF "%PROCESSOR_ARCHITECTURE%" EQU "amd64" (
+>nul 2>&1 "%SYSTEMROOT%\SysWOW64\cacls.exe" "%SYSTEMROOT%\SysWOW64\config\system"
+) ELSE (
+>nul 2>&1 "%SYSTEMROOT%\system32\cacls.exe" "%SYSTEMROOT%\system32\config\system"
+)
+if '%errorlevel%' NEQ '0' (
+    echo Requesting administrative privileges...
+    goto UACPrompt
+) else ( goto gotAdmin )
 
-echo.
-echo %LCyan%  EAC Forcer
-echo %LCyan%  Not working everytime, if not you're locked into BE
-echo %LCyan%  Made by NugzyF
-echo %LCyan%  Make sure you run this as ADMIN!
-echo %LCyan%  Make sure to have "REMEMBER ME" enabled!
-echo %LCyan%  Have Fun!
-echo.
-echo %LCyan%  Press any key to start...
-pause>nul
-:EAC
-cls
-echo.
-echo %LCyan%  Working, please do not do anything (Try n.%try%)
-set /a try+=1
-tasklist /nh /fi "imagename eq EpicGamesLauncher.exe" | find /i "EpicGamesLauncher.exe" 1>nul 2>nul && (
-  taskkill /f /im EpicGamesLauncher.exe 1>nul 2>nul
-)
-reg delete "HKEY_CURRENT_USER\Software\Epic Games\Unreal Engine\Hardware Survey" /f 1>nul 2>nul
-reg delete "HKEY_CURRENT_USER\Software\Epic Games\Unreal Engine\Identifiers" /f 1>nul 2>nul
-reg delete "HKU\S-1-5-21-860440266-1445122309-108474356-1001\Software\Epic Games\Unreal Engine\Identifiers" /va /f 1>nul 2>nul
-reg delete "HKU\S-1-5-21-860440266-1445122309-108474356-1001\Software\Epic Games\Unreal Engine\Hardware Survey" /va /f 1>nul 2>nul
-reg delete "HKEY_CURRENT_USER\Software\Epic Games" /f 1>nul 2>nul
-reg delete "HKU\S-1-5-21-860440266-1445122309-108474356-1001\Software\Epic Games" /f 1>nul 2>nul
-REG ADD HKLM\SYSTEM\CurrentControlSet\Control\ComputerName\ComputerName /v ComputerName /t REG_SZ /d FORCEr%random% /f 1>nul 2>nul
-REG ADD HKLM\SYSTEM\CurrentControlSet\Control\ComputerName\ActiveComputerName /v ComputerName /t REG_SZ /d FORCEr%random% /f 1>nul 2>nul
-reg delete "HKEY_CURRENT_USER\Software\Epic Games" /f 1>nul 2>nul
-timeout /T 5 /nobreak 1>nul 2>nul
-start com.epicgames.launcher://apps/Fortnite?action=launch
-:check1
-tasklist /nh /fi "imagename eq EasyAntiCheat.exe" | find /i "EasyAntiCheat.exe" 1>nul 2>nul && (
-goto done
-) || (
-  goto check2
-)
-:check2
-tasklist /nh /fi "imagename eq BEService.exe" | find /i "BEService.exe" 1>nul 2>nul && (
-timeout /T 2 /nobreak 1>nul 2>nul
-taskkill /f /im FortniteClient-Win64-Shipping_BE.exe 1>nul 2>nul
-sc stop BEService 1>nul 2>nul
-taskkill /f /im EpicGamesLauncher.exe 1>nul 2>nul
-) || (
-  goto check1
-)
-powershell -Command "Set-Date -Date (Get-Date).AddDays(1) | Out-Null"
-timeout /T 3 /nobreak 1>nul 2>nul
-cls
-goto EAC
+:UACPrompt
+    echo Set UAC = CreateObject^("Shell.Application"^) > "%temp%\getadmin.vbs"
+    set params= %*
+    echo UAC.ShellExecute "cmd.exe", "/c ""%~s0"" %params:"=""%", "", "runas", 1 >> "%temp%\getadmin.vbs"
 
-:done
+    "%temp%\getadmin.vbs"
+    del "%temp%\getadmin.vbs"
+    exit /B
+
+:gotAdmin
+    pushd "%CD%"
+    CD /D "%~dp0"
+:-------------------------------------- 
+@echo off
+title Nugzy EAC Forcer
+
+:a
 cls
-taskkill /f /im FortniteClient-Win64-Shipping_EAC.exe 1>nul 2>nul
-taskkill /f /im EasyAntiCheat.exe 1>nul 2>nul
-taskkill /f /im FortniteLauncher.exe 1>nul 2>nul
-taskkill /f /im EpicGamesLauncher.exe 1>nul 2>nul
+color 9
 echo.
-echo %LCyan%  EAC is forced! Now you can start Fortnite manually (Steam method works too)
-pause >nul
+
+echo [Info]: RUN AS ADMIN.
+set /p menu="[Y/N] Force EAC?: "
+if %menu%==Y goto Yes
+if %menu%==y goto Yes
+if %menu%==N goto No
+if %menu%==n goto No
+cls
+
+:Yes
+echo Forcing Easy Anti Cheat, please wait.
+set /p pause="[Info]: Wait 3 Seconds & Press enter."
+echo Forced!
+
+date 02/21/22
+
+:No
+echo.
+echo Force EAC you monke.
+echo Made by Nugzy
+set /p pause=" "
